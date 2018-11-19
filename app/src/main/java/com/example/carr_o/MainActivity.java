@@ -8,10 +8,12 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
 
 //import com.example.carr_o.fragment.MapsFragment;
 import com.example.carr_o.fragment.HomeFragment;
+import com.example.carr_o.fragment.LogFragment;
 import com.example.carr_o.fragment.ProfileFragment;
 //import com.example.carr_o.helper.BottomNavigationBehavior;
 
@@ -48,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
             Fragment fragment;
             switch (item.getItemId()) {
                 case R.id.navigation_maps:
-                    toolbar.setTitle("Maps");
-//                    fragment = new StoreFragment();
-//                    loadFragment(fragment);
+                    toolbar.setTitle("Logs");
+                    fragment = new LogFragment();
+                    loadFragment(fragment);
                     return true;
                 case R.id.navigation_home:
                     fragmentHome();

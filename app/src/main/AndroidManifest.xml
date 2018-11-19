@@ -13,14 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+
+
+             <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
         </activity>
-
-        <activity android:name=".ChooserActivity" >
+        <activity android:name=".ChooserActivity">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 
@@ -37,6 +38,7 @@
         <activity
             android:name=".FirebaseUIActivity"
             android:label="@string/label_firebase_ui" />
+        <activity android:name=".NewLogActivity"></activity>
     </application>
 
 </manifest>

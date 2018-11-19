@@ -1,8 +1,18 @@
 <resources>
     <string name="app_name">Carr-o</string>
 
+    <string name="save_button">Save</string>
+
+    <!-- Home -->
+    <string name="hello">Hello, </string>
+    <string name="mher">Mher Oganesyan</string>
+    <string name="good_terms">All is well!</string>
+
+    <!-- Log -->
+    <string name="search">Search</string>
+
     <string name="title_home">Home</string>
-    <string name="title_maps">Maps</string>
+    <string name="title_maps">Logs</string>
     <string name="title_profile">Profile</string>
 
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
