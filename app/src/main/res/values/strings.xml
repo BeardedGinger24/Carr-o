@@ -11,6 +11,15 @@
     <!-- Log -->
     <string name="search">Search</string>
 
+    <!-- New Log -->
+    <string name="display_date">Select Maitenance Date</string>
+    <string name="select_date">Select Date</string>
+    <string name="done_at">Location of Maintenance</string>
+    <string name="current_maint_mileage">Current Mileage</string>
+    <string name="cost_of_mait">Price of Maintenance</string>
+    <string name="mait_notes">Notes</string>
+    <string name="save_log">SAVE</string>
+
     <string name="title_home">Home</string>
     <string name="title_maps">Logs</string>
     <string name="title_profile">Profile</string>

@@ -1,7 +1,9 @@
 package com.example.carr_o;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +21,8 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
     Button mSaveButton;
     TextView mDisplayDate;
 
+    TextInputEditText mMaintenanceLocation, mCurrentMiles, mPriceOfMaintenance, mNotes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +30,11 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
 
         mSaveButton = (Button) findViewById(R.id.button_save_log);
         mDisplayDate = (TextView) findViewById(R.id.showDate);
+
+        mMaintenanceLocation = (TextInputEditText) findViewById(R.id.et_mait_loc);
+        mCurrentMiles = (TextInputEditText) findViewById(R.id.et_current_miles);
+        mPriceOfMaintenance = (TextInputEditText) findViewById(R.id.et_price_of_mait);
+        mNotes = (TextInputEditText) findViewById(R.id.et_notes);
 //        datePicker();
     }
 
@@ -79,7 +88,7 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
             int day = c.get(Calendar.DAY_OF_MONTH);
 
 
-            return new DatePickerDialog(getActivity(),
+            return new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT,
                     (DatePickerDialog.OnDateSetListener)
                             getActivity(), year, month, day);
         }
