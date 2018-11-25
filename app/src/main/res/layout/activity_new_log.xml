@@ -38,6 +38,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/display_date"
         app:layout_constraintBottom_toBottomOf="@+id/select_date"
         app:layout_constraintEnd_toStartOf="@+id/select_date"
@@ -51,7 +53,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:onClick="datePicker"
         android:text="@string/select_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -18,6 +18,7 @@
     <string name="current_maint_mileage">Current Mileage</string>
     <string name="cost_of_mait">Price of Maintenance</string>
     <string name="mait_notes">Notes</string>
+    <string name="error_missing_information">Please Enter Information</string>
     <string name="save_log">SAVE</string>
 
     <string name="title_home">Home</string>
