@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.carr_o.data.LogViewModel;
 import com.example.carr_o.data.Log;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.LogViewHolder>{
@@ -53,6 +54,7 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
         private final TextView mLocation;
         private final TextView mMiles;
         private final TextView mPrice;
+        private final TextView mType;
         private final TextView mNotes;
 
         private LogViewHolder(View itemView) {
@@ -63,15 +65,21 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
             mLocation = (TextView) itemView.findViewById(R.id.maintenance_title);
             mMiles = (TextView) itemView.findViewById(R.id.mileage);
             mPrice = (TextView) itemView.findViewById(R.id.total_price);
+            mType = (TextView) itemView.findViewById(R.id.maintenance_type);
             mNotes = (TextView) itemView.findViewById(R.id.maintenance_notes);
             itemView.setOnLongClickListener(this);
         }
 
         void bind(int position){
+//            double cost = mLogs.get(position).getTotalPrice();
+            DecimalFormat moneyformatter = new DecimalFormat("#,###.00");
+            DecimalFormat milesformatter = new DecimalFormat("#,###");
+
             mDate.setText("Date: " + mLogs.get(position).getDate());
             mLocation.setText("Location: " + mLogs.get(position).getLocation());
-            mMiles.setText("Mileage: " + mLogs.get(position).getMileage());
-            mPrice.setText("$ " + mLogs.get(position).getTotalPrice());
+            mMiles.setText("Mileage: " + milesformatter.format(mLogs.get(position).getMileage()));
+            mPrice.setText("$ " + moneyformatter.format(mLogs.get(position).getTotalPrice()));
+            mType.setText("Maintenance Type: " + mLogs.get(position).getMaintType());
             mNotes.setText("Notes: " + mLogs.get(position).getNotes());
 
         }

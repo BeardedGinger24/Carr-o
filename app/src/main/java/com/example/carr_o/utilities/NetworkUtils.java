@@ -31,7 +31,9 @@ public class NetworkUtils {
     final static String API_KEY = BuildConfig.ApiKey;
 //    final static String API_KEY = BuildConfig.ApiKey;
 
-    public static URL buildUrl() {
+    public static URL buildUrl(String vin) {
+        if(vin != null) VIN = vin;
+
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(VIN)
                 .appendPath("specs")

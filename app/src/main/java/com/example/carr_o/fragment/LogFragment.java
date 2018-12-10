@@ -119,6 +119,7 @@ public class LogFragment extends Fragment{
                     data.getStringExtra(NewLogActivity.EXTRA_REPLY_LOCATION),
                     data.getIntExtra(NewLogActivity.EXTRA_REPLY_MILEAGE, mileage),
                     data.getDoubleExtra(NewLogActivity.EXTRA_REPLY_PRICE, price),
+                    data.getStringExtra(NewLogActivity.EXTRA_REPLY_MAINTENANCE_TYPE),
                     data.getStringExtra(NewLogActivity.EXTRA_REPLY_NOTES));
             mLogViewModel.insert(log);
         }

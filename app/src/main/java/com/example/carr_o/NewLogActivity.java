@@ -15,8 +15,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
     public static final String EXTRA_REPLY_LOCATION = "com.example.android.loglistsql.LOCATION";
     public static final String EXTRA_REPLY_MILEAGE = "com.example.android.loglistsql.MILEAGE";
     public static final String EXTRA_REPLY_PRICE = "com.example.android.loglistsql.PRICE";
+    public static final String EXTRA_REPLY_MAINTENANCE_TYPE = "com.example.android.loglistsql.MAINTTYPE";
     public static final String EXTRA_REPLY_NOTES = "com.example.android.loglistsql.NOTES";
 
     Button mSaveButton, mSelectDate;
@@ -40,8 +43,12 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
     int mileage = 0;
     double price = 0.0;
 
-    TextInputEditText mMaintenanceLocation, mCurrentMiles, mPriceOfMaintenance, mNotes;
-    TextInputLayout MaintLoc, CurrentMiles, PriceOfMait, Notes;
+    String spinnerOption;
+    Boolean otherOption = false;
+
+    TextInputEditText mMaintenanceLocation, mCurrentMiles, mPriceOfMaintenance, mNotes, mOtherOption;
+    TextInputLayout MaintLoc, CurrentMiles, PriceOfMait, Notes, MaitType;
+    Spinner mMaintenanceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +73,41 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
         CurrentMiles = (TextInputLayout) findViewById(R.id.current_miles);
         PriceOfMait = (TextInputLayout) findViewById(R.id.price_of_mait);
         Notes = (TextInputLayout) findViewById(R.id.notes);
+        MaitType = (TextInputLayout) findViewById(R.id.maintenance_type);
 
         //Edit text
         mMaintenanceLocation = (TextInputEditText) findViewById(R.id.et_mait_loc);
         mCurrentMiles = (TextInputEditText) findViewById(R.id.et_current_miles);
         mPriceOfMaintenance = (TextInputEditText) findViewById(R.id.et_price_of_mait);
         mNotes = (TextInputEditText) findViewById(R.id.et_notes);
+        mOtherOption = (TextInputEditText) findViewById(R.id.et_other_option);
+
+        //Spinner
+        mMaintenanceType = (Spinner) findViewById(R.id.sp_maintenance_type);
+        mMaintenanceType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 8){
+                    mOtherOption.setVisibility(View.VISIBLE);
+                    otherOption = true;
+                } else {
+                    mOtherOption.setVisibility(View.GONE);
+                    otherOption = false;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         mMaintenanceLocation.addTextChangedListener(new MyTextWatcher(mMaintenanceLocation));
         mCurrentMiles.addTextChangedListener(new MyTextWatcher(mCurrentMiles));
         mPriceOfMaintenance.addTextChangedListener(new MyTextWatcher(mPriceOfMaintenance));
         mNotes.addTextChangedListener(new MyTextWatcher(mNotes));
+        mOtherOption.addTextChangedListener(new MyTextWatcher(mOtherOption));
+//        mMaitenanceType.addTextChangedListener(new MyTextWatcher(mMaitenanceType));
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +122,7 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
 
                     replyIntent.putExtra(EXTRA_REPLY_MILEAGE, mileage);
                     replyIntent.putExtra(EXTRA_REPLY_PRICE, price);
+                    replyIntent.putExtra(EXTRA_REPLY_MAINTENANCE_TYPE, spinnerOption);
 
                     String notes = mNotes.getText().toString();
                     replyIntent.putExtra(EXTRA_REPLY_NOTES, notes);
@@ -116,6 +148,10 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
         }
 
         if (!validatePrice()) {
+            return false;
+        }
+
+        if(!validateType()){
             return false;
         }
 
@@ -176,6 +212,32 @@ public class NewLogActivity extends AppCompatActivity implements DatePickerDialo
         } else {
             PriceOfMait.setErrorEnabled(false);
             price = Double.parseDouble(sPrice);
+        }
+
+        return true;
+    }
+
+    private boolean validateType(){
+        String selectedOption = String.valueOf(mMaintenanceType.getSelectedItem());
+        String[] options = getResources().getStringArray(R.array.maitenance_options);
+
+        if(selectedOption.equals("Choose an option...")){
+            MaitType.setError("Please Select a Maintenance Option");
+            requestFocus(mMaintenanceType);
+            return false;
+        } else if(selectedOption.equals("Other")){
+            if(mOtherOption.getText().toString().isEmpty()){
+                MaitType.setError("Please Type in the 'Other' Option");
+                requestFocus(mOtherOption);
+                return false;
+            } else {
+                spinnerOption = mOtherOption.getText().toString();
+            }
+
+
+//            return false;
+        } else{
+            spinnerOption = selectedOption;
         }
 
         return true;

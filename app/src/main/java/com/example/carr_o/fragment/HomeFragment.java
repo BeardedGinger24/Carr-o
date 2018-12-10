@@ -25,10 +25,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment implements HomeAdapter.ListItemClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     HomeAdapter mHomeAdapter;
     RecyclerView mCarInfo;
@@ -51,10 +47,6 @@ public class HomeFragment extends Fragment implements HomeAdapter.ListItemClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
@@ -71,14 +63,8 @@ public class HomeFragment extends Fragment implements HomeAdapter.ListItemClickL
         mCarInfo.setLayoutManager(layoutManager);
 
         mCarInfo.setHasFixedSize(true);
-//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
-//        mCarInfo.setLayoutManager(mLayoutManager);
-////        mCarInfo.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(8), true));
-//        mCarInfo.setItemAnimator(new DefaultItemAnimator());
-//        mCarInfo.setAdapter(mHomeAdapter);
-//        mCarInfo.setNestedScrollingEnabled(false);
 
-        makeNewsSearchQuery();
+//        makeNewsSearchQuery();
 
 //        fetchStoreItems();
 
@@ -90,47 +76,40 @@ public class HomeFragment extends Fragment implements HomeAdapter.ListItemClickL
 
     }
 
-    private void makeNewsSearchQuery(){
-        URL newsSearchUrl = NetworkUtils.buildUrl();
-        new VINQueryTask().execute(newsSearchUrl);
-    }
-
-    public class VINQueryTask extends AsyncTask<URL, Void, String>{
-       @Override
-       protected void onPreExecute() {
-           super.onPreExecute();
-       }
-
-       @Override
-       protected String doInBackground(URL... urls) {
-           URL searchUrl = urls[0];
-           String newsSearchResults = null;
-           try {
-               newsSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-           } catch (IOException e) {
-               e.printStackTrace();
-           }
-           return newsSearchResults;
-       }
-
-       @Override
-       protected void onPostExecute(String newsSearchResults) {
-           super.onPostExecute(newsSearchResults);
-           carInfo = JsonUtils.parseJson(newsSearchResults);
-
-           mHomeAdapter = new HomeAdapter( carInfo);
-           mCarInfo.setAdapter(mHomeAdapter);
-           //String test = articles.get(0).getAuthor();
-           //mNewsJsonResults.setText(test);
-       }
-   }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-    }
+//    private void makeNewsSearchQuery(){
+//        URL newsSearchUrl = NetworkUtils.buildUrl();
+//        new VINQueryTask().execute(newsSearchUrl);
+//    }
+//
+//    public class VINQueryTask extends AsyncTask<URL, Void, String>{
+//       @Override
+//       protected void onPreExecute() {
+//           super.onPreExecute();
+//       }
+//
+//       @Override
+//       protected String doInBackground(URL... urls) {
+//           URL searchUrl = urls[0];
+//           String newsSearchResults = null;
+//           try {
+//               newsSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+//           } catch (IOException e) {
+//               e.printStackTrace();
+//           }
+//           return newsSearchResults;
+//       }
+//
+//       @Override
+//       protected void onPostExecute(String newsSearchResults) {
+//           super.onPostExecute(newsSearchResults);
+//           carInfo = JsonUtils.parseJson(newsSearchResults);
+//
+//           mHomeAdapter = new HomeAdapter( carInfo);
+//           mCarInfo.setAdapter(mHomeAdapter);
+//           //String test = articles.get(0).getAuthor();
+//           //mNewsJsonResults.setText(test);
+//       }
+//   }
 
     @Override
     public void onAttach(Context context) {

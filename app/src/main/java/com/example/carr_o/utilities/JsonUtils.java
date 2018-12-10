@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class JsonUtils {
 
-    public static ArrayList<VINDecode> parseJson(String Json){
+    public static ArrayList<VINDecode> parseJson(String Json, int miles){
         ArrayList<VINDecode> newsItems = new ArrayList<>();
 
         try {
@@ -34,7 +34,7 @@ public class JsonUtils {
             String city_miles = results.getString("city_miles");
 
                 newsItems.add(new VINDecode(year, make, model, trim, body_type, transmission, drivetrain,
-                        engine, doors, tank_size, std_seating, highway_miles, city_miles));
+                        engine, doors, tank_size, std_seating, highway_miles, city_miles, miles));
 
             String car = year + " " + make;
             Log.d("JSON_PARSE", car);

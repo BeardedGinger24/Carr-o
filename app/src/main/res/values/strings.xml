@@ -2,6 +2,7 @@
     <string name="app_name">Carr-o</string>
 
     <string name="save_button">Save</string>
+    <string name="submit">Submit</string>
 
     <!-- Home -->
     <string name="hello">Hello, </string>
@@ -20,6 +21,18 @@
     <string name="mait_notes">Notes</string>
     <string name="error_missing_information">Please Enter Information</string>
     <string name="save_log">SAVE</string>
+    <string name="maitenance_options_prompt">Choose maintenance type...</string>
+    <string-array name="maitenance_options">
+        <item>Choose an option...</item>
+        <item>Oil Change</item>
+        <item>Engine Air Filter</item>
+        <item>Spark Plug</item>
+        <item>Coolant</item>
+        <item>Transmission Fluid</item>
+        <item>Brakes</item>
+        <item>Brake Fluid</item>
+        <item>Other</item>
+    </string-array>
 
     <string name="title_home">Home</string>
     <string name="title_maps">Logs</string>

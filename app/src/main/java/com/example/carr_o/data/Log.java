@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.widget.Spinner;
 
 @Entity(tableName = "log_item")
 public class Log {
@@ -26,24 +27,29 @@ public class Log {
     @ColumnInfo(name = "total_price")
     private double totalPrice;
 
+    @ColumnInfo(name = "maintenance_type")
+    private String maintType;
+
     @ColumnInfo(name = "notes")
     private String notes;
 
-    public Log(@NonNull int id, String date, String location, int mileage, double totalPrice, String notes) {
+    public Log(@NonNull int id, String date, String location, int mileage, double totalPrice, String maintType, String notes) {
         this.id = id;
         this.date = date;
         this.location = location;
         this.mileage = mileage;
         this.totalPrice = totalPrice;
+        this.maintType = maintType;
         this.notes = notes;
     }
 
     @Ignore
-    public Log(String date, String location, int mileage, double totalPrice, String notes) {
+    public Log(String date, String location, int mileage, double totalPrice, String maintType, String notes) {
         this.date = date;
         this.location = location;
         this.mileage = mileage;
         this.totalPrice = totalPrice;
+        this.maintType = maintType;
         this.notes = notes;
     }
 
@@ -94,5 +100,13 @@ public class Log {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getMaintType() {
+        return maintType;
+    }
+
+    public void setMaintType(String maintType) {
+        this.maintType = maintType;
     }
 }
