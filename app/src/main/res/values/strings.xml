@@ -12,6 +12,8 @@
     <!-- Log -->
     <string name="search">Search</string>
 
+    <string name="please_signin">Please Sign into Account</string>
+
     <!-- New Log -->
     <string name="display_date">Select Maitenance Date</string>
     <string name="select_date">Select Date</string>
