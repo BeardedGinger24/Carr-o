@@ -56,6 +56,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private GoogleSignInClient mGoogleSignInClient;
     TextView mUserName;
     ImageView mProfilePicture;
+    TextView mStatus;
 
     EditText mVIN;
     EditText mMiles;
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // Account
         mUserName = (TextView) view.findViewById(R.id.tv_username);
         mProfilePicture = (ImageView) view.findViewById(R.id.iv_profile_picture);
+        mStatus = (TextView) view.findViewById(R.id.tv_signin_text);
 
         // Button listeners
         view.findViewById(R.id.signInButtonMine).setOnClickListener(this);
@@ -273,6 +275,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 //        hideProgressDialog();
         if (user != null) {
             mUserName.setText(user.getDisplayName());
+            mStatus.setText(user.getEmail());
+            mStatus.setTextSize(18);
             Uri imageLink = user.getPhotoUrl();
 
             if(imageLink != null){
@@ -286,6 +290,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         } else {
 //            mStatusTextView.setText(R.string.signed_out);
 //            mDetailTextView.setText(null);
+            mStatus.setText(R.string.please_signin);
+            mStatus.setTextSize(36);
+            mProfilePicture.setImageResource(R.drawable.ic_person_white);
+            mUserName.setText("");
             view.findViewById(R.id.signOutButtonMine).setVisibility(View.GONE);
             view.findViewById(R.id.signInButtonMine).setVisibility(View.VISIBLE);
 //            view.findViewById(R.id.signOutAndDisconnect).setVisibility(View.GONE);
