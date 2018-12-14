@@ -6,11 +6,13 @@ import android.os.AsyncTask;
 
 import com.example.carr_o.HomeAdapter;
 import com.example.carr_o.data.Log;
+import com.example.carr_o.data.LogDao;
 import com.example.carr_o.utilities.JsonUtils;
 import com.example.carr_o.utilities.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VINDecodeRepository {
@@ -31,6 +33,16 @@ public class VINDecodeRepository {
         return mAllCars;
     }
 
+    public int getMiles(Application application){
+//        VINDecodeDatabase db = VINDecodeDatabase.getDatabase(application.getApplicationContext());
+//        mVINDecodeDao = db.vinDecodeDao();
+//        android.util.Log.d("VIN DAO", "getMiles: " + mVINDecodeDao.getAllCars().getValue().toString());
+//        mAllCars = mVINDecodeDao.getAllCars();
+        List<VINDecode> vinList = new ArrayList<>();
+        vinList = mAllCars.getValue();
+        android.util.Log.d("REPO", "getMiles: " + vinList.get(0).getCurrent_miles());
+        return vinList.get(0).getCurrent_miles();
+    }
 
     public void insert (VINDecode vinDecode) {
         new VINDecodeRepository.insertAsyncTask(mVINDecodeDao).execute(vinDecode);
@@ -39,6 +51,32 @@ public class VINDecodeRepository {
     public void delete(VINDecode vinDecode){
         new VINDecodeRepository.deleteAsyncTask(mVINDecodeDao).execute(vinDecode);
     }
+
+    public void updateMiles(int miles){
+//        mVINDecodeDao.updateMiles(miles);
+        new VINDecodeRepository.updateAsyncTask(mVINDecodeDao).execute(miles);
+    }
+
+    private static class updateAsyncTask extends AsyncTask<Integer, Void, Void>{
+        private VINDecodeDao mAsyncTaskDao;
+        updateAsyncTask(VINDecodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+//        @Override
+//        protected Void doInBackground(final int miles) {
+//            mAsyncTaskDao.updateMiles(miles);
+//            return null;
+//        }
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            mAsyncTaskDao.updateMiles(integers[0]);
+            return null;
+        }
+    }
+
+
 
     private static class insertAsyncTask extends AsyncTask<VINDecode, Void, Void> {
         private VINDecodeDao mAsyncTaskDao;

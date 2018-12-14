@@ -22,6 +22,10 @@ public class VINDecodeViewModel extends AndroidViewModel {
 
     public void update(String vin, int miles){mRepository.makeNewsSearchQuery(vin, miles);}
 
+    public void updateMiles(int miles){
+        mRepository.updateMiles(miles);
+    }
+
     public LiveData<List<VINDecode>> getAllLogs() {
         return mAllLogs;
     }

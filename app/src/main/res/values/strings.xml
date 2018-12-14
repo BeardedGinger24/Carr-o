@@ -8,6 +8,12 @@
     <string name="hello">Hello, </string>
     <string name="new_comer">Newcomer</string>
     <string name="good_terms">All is well!</string>
+    <string name="bad_terms">Your car needs maintenance!</string>
+    <string name="maint_complete">Complete</string>
+
+    <string name="main_notification_channel_name">Primary</string>
+    <string name="notification_title">Car Needs Maintenance</string>
+    <string name="notification_content">Click to check on what needs maintenance.</string>
 
     <!-- Log -->
     <string name="search">Search</string>

@@ -24,4 +24,7 @@ public interface VINDecodeDao {
 
     @Query("SELECT * FROM car_info ORDER BY id ASC")
     LiveData<List<VINDecode>> getAllCars();
+
+    @Query("UPDATE car_info SET  car_current_miles = :miles")
+    void updateMiles(int miles);
 }

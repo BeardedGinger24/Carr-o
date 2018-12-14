@@ -33,7 +33,10 @@ public class Log {
     @ColumnInfo(name = "notes")
     private String notes;
 
-    public Log(@NonNull int id, String date, String location, int mileage, double totalPrice, String maintType, String notes) {
+    @ColumnInfo(name = "status")
+    private int status;
+
+    public Log(@NonNull int id, String date, String location, int mileage, double totalPrice, String maintType, String notes, int status) {
         this.id = id;
         this.date = date;
         this.location = location;
@@ -41,16 +44,18 @@ public class Log {
         this.totalPrice = totalPrice;
         this.maintType = maintType;
         this.notes = notes;
+        this.status = status;
     }
 
     @Ignore
-    public Log(String date, String location, int mileage, double totalPrice, String maintType, String notes) {
+    public Log(String date, String location, int mileage, double totalPrice, String maintType, String notes, int status) {
         this.date = date;
         this.location = location;
         this.mileage = mileage;
         this.totalPrice = totalPrice;
         this.maintType = maintType;
         this.notes = notes;
+        this.status = status;
     }
 
     @NonNull
@@ -108,5 +113,13 @@ public class Log {
 
     public void setMaintType(String maintType) {
         this.maintType = maintType;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

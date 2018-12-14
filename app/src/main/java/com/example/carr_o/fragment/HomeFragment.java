@@ -1,29 +1,32 @@
 package com.example.carr_o.fragment;
 
+import android.app.ActionBar;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.carr_o.HomeAdapter;
-import com.example.carr_o.MainActivity;
+import com.example.carr_o.LogRecyclerViewAdapter;
 import com.example.carr_o.R;
+import com.example.carr_o.data.LogViewModel;
+import com.example.carr_o.data.LogViewModelFactory;
 import com.example.carr_o.model.VINDecode;
-import com.example.carr_o.utilities.NetworkUtils;
-import com.example.carr_o.utilities.JsonUtils;
+import com.example.carr_o.model.VINDecodeViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -36,21 +39,35 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class HomeFragment extends Fragment implements HomeAdapter.ListItemClickListener {
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
 
+    int Current_Mileage;
+    VINDecodeViewModel mVINViewModel;
+    private LogViewModel mLogViewModel2;
+
+
+//    private ActionBar toolbar;
+
+    private LogViewModel mLogViewModel;
+    RecyclerView recyclerView;
     HomeAdapter mHomeAdapter;
-    RecyclerView mCarInfo;
-    ArrayList<VINDecode> carInfo;
+
+//    ArrayList<VINDecode> carInfo;
     TextView mUserName;
+    ImageView mImageStatus;
+    TextView mTextStatus;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -83,15 +100,149 @@ public class HomeFragment extends Fragment implements HomeAdapter.ListItemClickL
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mCarInfo = view.findViewById(R.id.recycler_view);
-        carInfo = new ArrayList<>();
-        mHomeAdapter = new HomeAdapter(carInfo);
-        mUserName = view.findViewById(R.id.users_name);
+        mUserName = (TextView) view.findViewById(R.id.users_name);
+        mImageStatus = (ImageView) view.findViewById(R.id.status_image);
+        mTextStatus = (TextView) view.findViewById(R.id.status_text);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mCarInfo.setLayoutManager(layoutManager);
+        mVINViewModel = ViewModelProviders.of(this).get(VINDecodeViewModel.class);
+        mVINViewModel.getAllLogs().observe(this, new Observer<List<VINDecode>>() {
+            @Override
+            public void onChanged(@Nullable List<VINDecode> vinDecodes) {
+                Current_Mileage = vinDecodes.get(0).getCurrent_miles();
+                final Date today = new Date();
+                Log.d("Current miles", "onCreateView: " + Current_Mileage);
 
-        mCarInfo.setHasFixedSize(true);
+                mLogViewModel2 = ViewModelProviders.of(HomeFragment.this, new LogViewModelFactory(getActivity().getApplication(), 0)).get(LogViewModel.class);
+                mLogViewModel2.getAllLogs(-1).observe(HomeFragment.this, new Observer<List<com.example.carr_o.data.Log>>() {
+                    @Override
+                    public void onChanged(@Nullable List<com.example.carr_o.data.Log> logs) {
+                        if(logs.size() > 0){
+                            for(int i = 0; i < logs.size(); i++){
+                                String date = logs.get(i).getDate();
+                                DateFormat srcDf = new SimpleDateFormat("MMM dd, yyyy");
+                                // parse the date string into Date object
+
+                                try {
+                                    Date convertedDate = srcDf.parse(date);
+//
+//                                    Calendar cal1 = Calendar.getInstance();
+//                                    Calendar cal2 = Calendar.getInstance();
+//                                    cal1.setTime(today);
+//                                    cal2.setTime(convertedDate);
+
+//                                    boolean yearGap =
+
+                                    if(logs.get(i).getMaintType().equals("Oil Change")) {
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 183) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 3000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    } else if (logs.get(i).getMaintType().equals( "Engine Air Filter")){
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 365) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 10000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    } else if(logs.get(i).getMaintType().equals("Spark Plug")){
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 1095) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 30000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    } else if(logs.get(i).getMaintType().equals("Coolant")){
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 1825) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 60000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    } else if(logs.get(i).getMaintType().equals("Transmission Fluid")){
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 1095) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 30000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    } else if(logs.get(i).getMaintType().equals("Brakes")){
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 1460) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 50000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    } else if(logs.get(i).getMaintType().equals("Brake Fluid")){
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 730) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 20000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    } else if(logs.get(i).getMaintType().equals("Headlight Fluid")){
+                                        mTextStatus.setText("Why you yellin at the mic?");
+                                    } else{
+                                        long timeSpan = today.getTime() - convertedDate.getTime();
+                                        if (timeSpan / ((1000 * 60 * 60 * 24)) > 183) {
+                                            Log.d("Got time", "onChanged: ");
+                                            mLogViewModel2.update(logs.get(i));
+                                        } else if (Current_Mileage - logs.get(i).getMileage() > 3000) {
+                                            mLogViewModel2.update(logs.get(i));
+                                        }
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+
+
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+        recyclerView = view.findViewById(R.id.recycler_view);
+        mLogViewModel = ViewModelProviders.of(this, new LogViewModelFactory(getActivity().getApplication(), 0)).get(LogViewModel.class);
+        final HomeAdapter adapter = new HomeAdapter(getContext(), mLogViewModel);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        mLogViewModel.getAllLogs(0).observe(this, new Observer<List<com.example.carr_o.data.Log>>() {
+            @Override
+            public void onChanged(@Nullable final List<com.example.carr_o.data.Log> logs) {
+                adapter.setLogs(logs);
+                if(adapter.getItemCount() == 0){
+                    Log.d("Count", "onChanged: Has obseerver");
+                    mImageStatus.setImageResource(R.drawable.checkmark_64);
+                    mTextStatus.setText(R.string.good_terms);
+                } else if(adapter.getItemCount() > 0) {
+                    mImageStatus.setImageResource(R.drawable.ic_warning_black_24dp);
+                    mTextStatus.setText(R.string.bad_terms);
+                }
+            }
+        });
+
+//        carInfo = new ArrayList<>();
+//        mHomeAdapter = new HomeAdapter(carInfo);
+
+
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+//        mCarInfo.setLayoutManager(layoutManager);
+//
+//        mCarInfo.setHasFixedSize(true);
 
 
         // [START config_signin]

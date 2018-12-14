@@ -48,6 +48,8 @@ public class LogFragment extends Fragment{
     SearchView mSearchList;
     Button mSearchButton;
     String search;
+    private List<Log> mLogs;
+    private LogRecyclerViewAdapter adaptetr;
 
     public static final int NEW_LOG_ACTIVITY_REQUEST_CODE = 1;
     @Override
@@ -63,22 +65,11 @@ public class LogFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_log, container, false);
 
+
         mSearchList = view.findViewById(R.id.searchView);
         mSearchButton = view.findViewById(R.id.search_button);
 
-        mSearchList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchQuery(query);
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchQuery(newText);
-                return false;
-            }
-        });
 
         recyclerView = view.findViewById(R.id.log_recycler_view);
         mLogViewModel = ViewModelProviders.of(this, new LogViewModelFactory(getActivity().getApplication(), search)).get(LogViewModel.class);
@@ -102,12 +93,28 @@ public class LogFragment extends Fragment{
             }
         });
 
+        mSearchList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+//                searchQuery(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//                searchQuery(newText);
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         // Inflate the layout for this fragment
         return view;
     }
 
     private void searchQuery(String query){
         search = query;
+        mLogViewModel.getAllLogs(search);
         android.util.Log.d("SEARCH", "onQueryTextSubmit: " + search);
     }
 
@@ -120,7 +127,7 @@ public class LogFragment extends Fragment{
                     data.getIntExtra(NewLogActivity.EXTRA_REPLY_MILEAGE, mileage),
                     data.getDoubleExtra(NewLogActivity.EXTRA_REPLY_PRICE, price),
                     data.getStringExtra(NewLogActivity.EXTRA_REPLY_MAINTENANCE_TYPE),
-                    data.getStringExtra(NewLogActivity.EXTRA_REPLY_NOTES));
+                    data.getStringExtra(NewLogActivity.EXTRA_REPLY_NOTES), -1);
             mLogViewModel.insert(log);
         }
     }

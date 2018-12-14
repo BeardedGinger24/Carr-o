@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ public interface LogDao {
     @Delete
     void delete(Log log);
 
+    @Query("UPDATE log_item SET  status = status + 1 WHERE id = :id")
+    void update(int id);
+
     @Query("DELETE FROM log_item")
     void deleteAll();
 
@@ -25,4 +29,7 @@ public interface LogDao {
 
     @Query("SELECT * FROM log_item WHERE maintenance_location LIKE LOWER(:search)")
     LiveData<List<Log>> getSearch(String search);
+
+    @Query("SELECT * FROM log_item WHERE status LIKE :search")
+    LiveData<List<Log>> getMaintenance(int search);
 }

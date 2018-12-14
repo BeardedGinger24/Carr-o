@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.carr_o.fragment.HomeFragment;
 import com.example.carr_o.fragment.LogFragment;
 import com.example.carr_o.fragment.ProfileFragment;
+import com.example.carr_o.sync.UpdateUtilities;
 //import com.example.carr_o.helper.BottomNavigationBehavior;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnFragmentInteractionListener {
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnFr
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fragmentHome();
+        UpdateUtilities.scheduleUpdate(this);
 
     }
 
