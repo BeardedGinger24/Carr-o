@@ -48,12 +48,15 @@ public class LogFragment extends Fragment{
     SearchView mSearchList;
     Button mSearchButton;
     String search;
+    private List<Log> mLogs;
+    private LogRecyclerViewAdapter adaptetr;
 
     public static final int NEW_LOG_ACTIVITY_REQUEST_CODE = 1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.fragment_log);
+
 
 
     }
@@ -66,23 +69,11 @@ public class LogFragment extends Fragment{
         mSearchList = view.findViewById(R.id.searchView);
         mSearchButton = view.findViewById(R.id.search_button);
 
-        mSearchList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchQuery(query);
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchQuery(newText);
-                return false;
-            }
-        });
 
         recyclerView = view.findViewById(R.id.log_recycler_view);
         mLogViewModel = ViewModelProviders.of(this, new LogViewModelFactory(getActivity().getApplication(), search)).get(LogViewModel.class);
-        final LogRecyclerViewAdapter adapter = new LogRecyclerViewAdapter(getContext(), mLogViewModel);
+        final LogRecyclerViewAdapter adapter = new LogRecyclerViewAdapter(getContext(), mLogViewModel, mLogs);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
@@ -90,6 +81,7 @@ public class LogFragment extends Fragment{
             @Override
             public void onChanged(@Nullable final List<Log> logs) {
                 adapter.setLogs(logs);
+
             }
         });
 
@@ -102,6 +94,21 @@ public class LogFragment extends Fragment{
             }
         });
 
+        mSearchList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                    adapter.getFilter().filter(newText);
+
+                return false;
+            }
+        });
         // Inflate the layout for this fragment
         return view;
     }

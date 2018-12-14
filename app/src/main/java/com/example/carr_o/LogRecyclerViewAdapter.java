@@ -6,24 +6,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import java.util.ArrayList;
 import com.example.carr_o.data.LogViewModel;
 import com.example.carr_o.data.Log;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.LogViewHolder>{
+public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerViewAdapter.LogViewHolder> implements Filterable{
 
     private final LayoutInflater mInflater;
     private List<Log> mLogs; // Cached copy of words
     private LogViewModel viewModel;
+    private List<Log> mLogsFull;
 
-    public LogRecyclerViewAdapter(Context context, LogViewModel viewModel) {
+    public LogRecyclerViewAdapter(Context context, LogViewModel viewModel,List<Log> mLogs) {
         this.viewModel = viewModel;
         mInflater = LayoutInflater.from(context);
+        this.mLogs = mLogs;
     }
 
     @Override
@@ -40,6 +44,8 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     public void setLogs(List<Log> logs){
         mLogs = logs;
         notifyDataSetChanged();
+        mLogsFull = new ArrayList<>(mLogs);
+
     }
 
     @Override
@@ -100,5 +106,43 @@ public class LogRecyclerViewAdapter extends RecyclerView.Adapter<LogRecyclerView
     public void setmLogs(List<Log> mLogs) {
         this.mLogs = mLogs;
     }
+
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Log> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(mLogsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Log item : mLogsFull) {
+                    if (item.getMaintType().toLowerCase().contains(filterPattern) || item.getDate().toLowerCase().contains(filterPattern) || item.getLocation().toLowerCase().contains(filterPattern) || item.getNotes().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mLogs.clear();
+            mLogs.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
 
 }
